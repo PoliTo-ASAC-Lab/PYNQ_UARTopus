@@ -12,12 +12,14 @@ sock.connect((IP, TCP_PORT))
 print(f"Listening to TCP://{IP}:{TCP_PORT}")
 
 while True:
-    #time.sleep(1)
-    try:
-        recv_data = sock.recv(1024)
-    except ConnectionResetError:
-        recv_data = None
-
-    if recv_data:
+    time.sleep(1)
+    print("sending")
+    sock.sendall("ciao".encode())
+    #try:
+    #    recv_data = sock.recv(1024)
+    #except ConnectionResetError:
+    #    recv_data = None
+#
+    #if recv_data:
         #print(f"S: New data from device, {len(recv_data)} bytes")
-        print(recv_data.decode(),end="")
+    #    print(recv_data.decode(),end="")

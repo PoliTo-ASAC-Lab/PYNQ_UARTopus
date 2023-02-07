@@ -14,7 +14,7 @@ from datetime import datetime
 sys.path.insert(1, './src')
 from uartlite import *
 
-DEBUG = False
+DEBUG = True
 
 def th_serial_dispatcher(UART_AXI_address, q_tx: queue.Queue, q_rx_l: List[queue.Queue], q_cmd: queue.Queue):
     wait_time = 0.0
@@ -48,10 +48,23 @@ def th_serial_dispatcher(UART_AXI_address, q_tx: queue.Queue, q_rx_l: List[queue
         except Exception as e:
             print(f"S: Bridge {hex(UART_AXI_address)} exception occurred in rx mode: {e}")
 
+        try:
+            to_send = q_tx.get_nowait()
+            uart.write(to_send)
+            if DEBUG: print(f"S: Sent {to_send} to the Serial")
+            wait_time = 0.0
+        except queue.Empty:
+            wait_time = (wait_time + delta_t) if wait_time < max_wait else wait_time
+            if wait_time > 0:
+                sleep(wait_time)
+            pass
+        except Exception as e:
+            print(f"S: Bridge exception occurred in tx mode: {e}")
+
     print("S: Closing the bridge...!")
 
 
-HOST = "127.0.0.1" # PYNQ
+HOST = "192.168.2.99" # PYNQ
 PORT = 6543
 DFBR = 19200
 
@@ -122,9 +135,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                             recv_data = None
 
                         if recv_data:
-                            print(f"S: New data from {data.addr}, {len(recv_data)} bytes")
-                            print(f"C: {recv_data}")
-                            q_tx.put(recv_data)
+                            if DEBUG: print(f"S: New data from {data.addr}, {len(recv_data)} bytes")
+                            if DEBUG: print(f"C: {recv_data}")
+                            q_tx.put(recv_data.decode())
                         else:
                             print(f"S: Closing connection with {data.addr}")
                             q_rx_l.pop(data.q_rx_pos)

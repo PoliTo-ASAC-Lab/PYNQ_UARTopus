@@ -49,7 +49,7 @@ class UartAXI:
             'FRAME_ERR':self.getBit(status, FRAME_ERR),
             'PARITY_ERR':self.getBit(status, PARITY_ERR)}
 
-    def read(self, count, timeout = 10):
+    def read(self, count, timeout = 1):
         # status = currentStatus(uart) bad idea
         buf = ""
         stop_time = time() + timeout
@@ -80,10 +80,14 @@ class UartAXI:
             wr_count += 1
         return wr_count   
 
-    def readLine(self):
+    def readLine(self, timeout=1):
+        stop_time = time() + timeout
         buf = self.read(1)
         if len(buf) ==0:
             return ""
         while '\n' not in buf:
             buf += self.read(1)
+            # Check timeout
+            if time()>stop_time:
+                break
         return buf
