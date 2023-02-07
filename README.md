@@ -3,7 +3,7 @@ Python platform to use a TUL PYNQ-Z2 development board to virtualize up to 12 UA
 Heavily inspired by [**parthpower/axi_uartlite_pynq**](https://github.com/parthpower/axi_uartlite_pynq).
 
 ## UART interfaces pinout
-ID | AXI_BASE_ADDRESS | TX_pin | RX_pin
+ID | AXI_BASE_ADDRESS | TX | RX
 |  :-: |  :-: |  :-: | :-: |
 UART_1 | 0x42C10000 | PMODA-1 | PMODA-7 
 UART_2 | 0x42C20000 | PMODA-2 | PMODA-8
