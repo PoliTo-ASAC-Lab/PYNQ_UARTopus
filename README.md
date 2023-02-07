@@ -1,5 +1,5 @@
 # PYNQ_UARTopus
-Python platform to use a TUL PYNQ-Z2 development board to virtualize up to 12 UART connections over TCP-IP
+Python platform to use a TUL PYNQ-Z2 development board to virtualize up to 12 UART connections (tx+rx) over TCP-IP
 
 ### UART interfaces pinout
 ID | AXI_BASE_ADDRESS | TX_pin | RX_pin
@@ -18,4 +18,4 @@ UART_11 | 0x42CB0000 | AR-4 | AR-5
 UART_12 | 0x42C00000 | AR-6 | AR-7
 
 ### UART interfaces pinout
-![image137](https://user-images.githubusercontent.com/37268662/217039841-159d9200-0901-48b2-8e01-04d3e8d76c49.png)
+![UART_interfaces_pinout](https://user-images.githubusercontent.com/37268662/217187596-a422d963-93b3-46a0-aad0-eeff5566b696.png)
