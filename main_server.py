@@ -16,6 +16,7 @@ from uartlite import *
 
 BIT_PATH = "./src/UART_HW_3.bit" 
 DEBUG = True
+VERBOSE = False
 
 def th_serial_dispatcher(UART_AXI_address, q_tx: queue.Queue, q_rx_l: List[queue.Queue], q_cmd: queue.Queue):
     wait_time = 0.0
@@ -36,7 +37,7 @@ def th_serial_dispatcher(UART_AXI_address, q_tx: queue.Queue, q_rx_l: List[queue
             if uart.currentStatus()['RX_VALID'] & 1: # "if something arrives" (see ./src/uartlite.py)
                 data = (uart.readLine()).encode()
 
-                if DEBUG: print(f"S: Received {len(data)} bytes from {hex(UART_AXI_address)}. Sending to {len(q_rx_l)} clients")
+                if VERBOSE: print(f"S: Received {len(data)} bytes from {hex(UART_AXI_address)}. Sending to {len(q_rx_l)} clients")
                 for q_rx in q_rx_l:
                     q_rx.put(data, block=True)
 
@@ -91,7 +92,7 @@ ol = Overlay(BIT_PATH, download=False)
 while(not ol.is_loaded()):
     sleep(1.5)
     print(".", end="", flush=True)
-print("GOT IT!")
+print("OK!")
 
 # Spawning the serial-UART dispatcher thread
 th0 = threading.Thread(target=th_serial_dispatcher, args=(UART_AXI_address, q_tx, q_rx_l, q_cmd))
@@ -136,7 +137,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                             recv_data = None
 
                         if recv_data:
-                            if DEBUG: print(f"S: New data from {data.addr}, {len(recv_data)} bytes")
+                            if VERBOSE: print(f"S: New data from {data.addr}, {len(recv_data)} bytes")
                             if DEBUG: print(f"C: {recv_data}")
                             q_tx.put(recv_data.decode())
                         else:
