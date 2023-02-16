@@ -30,10 +30,14 @@ SESSIONEXISTS=$(tmux list-sessions | grep $SESSION)
 # Only create tmux session if it doesn't already exist
 if [ "$SESSIONEXISTS" = "" ]
 then
-    python3 ./overlay_init.py
+    #python3 ./overlay_init.py
     
     # Start New Session with our name 
     tmux new-session -d -s $SESSION
+
+    tmux send-keys -t 0.0 "python3 ./overlay_init.py" C-m
+    sleep 6
+    tmux send-keys -t 0.0 "clear" C-m
 
     tmux set -g pane-border-status top
     tmux set -g pane-border-format "#{pane_title}"
@@ -69,6 +73,7 @@ then
     ##########################
     ######## Automatic #######
     ##########################
+
     for (( i = 0; i < $1; i++ )); do
         tmux send-keys -t $(($i/4)).$(($i%4)) "python3 ./main_server.py UART$(($i+1)) ${UART_b_adds[$i]} 300$(($i+1))" C-m
         tmux select-pane -t $(($i/4)).$(($i%4)) -T "UART$(($i+1))" # Setting title
@@ -76,4 +81,4 @@ then
 
 fi
 
-tmux attach -t $SESSION:0.1
+tmux attach -t $SESSION:0.0

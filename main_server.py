@@ -14,6 +14,7 @@ from datetime import datetime
 sys.path.insert(1, './src')
 from uartlite import *
 
+BIT_PATH = "./src/UART_HW_3.bit" 
 DEBUG = True
 
 def th_serial_dispatcher(UART_AXI_address, q_tx: queue.Queue, q_rx_l: List[queue.Queue], q_cmd: queue.Queue):
@@ -64,9 +65,9 @@ def th_serial_dispatcher(UART_AXI_address, q_tx: queue.Queue, q_rx_l: List[queue
     print("S: Closing the bridge...!")
 
 
-HOST = "192.168.2.99" # PYNQ
+HOST = "192.168.1.100" # PYNQ
 PORT = 6543
-DFBR = 19200
+DFBR = 9600
 
 # Arguments parsing
 parser = argparse.ArgumentParser(description="Serial - TCP/IP Manhattan Bridge")
@@ -85,12 +86,12 @@ q_rx_l: List[queue.Queue] = []
 q_cmd = queue.Queue()
 
 # Overlay handle retrieval 
-bit_path = "./src/UART_HW_2.bit"
-print(f"[INFO] Getting HW overlay handle for {bit_path}...", end="", flush=True)
-ol = Overlay(bit_path, download=False)
-if not ol.is_loaded():
-    exit("\n[ERROR] Bitstream not loaded, run overlay_init.py first!")
-print("DONE!")
+print(f"[INFO] Waiting for HW overlay handle [{BIT_PATH}]...", end="", flush=True)
+ol = Overlay(BIT_PATH, download=False)
+while(not ol.is_loaded()):
+    sleep(1.5)
+    print(".", end="", flush=True)
+print("GOT IT!")
 
 # Spawning the serial-UART dispatcher thread
 th0 = threading.Thread(target=th_serial_dispatcher, args=(UART_AXI_address, q_tx, q_rx_l, q_cmd))
