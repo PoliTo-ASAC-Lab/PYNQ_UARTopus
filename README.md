@@ -1,5 +1,5 @@
 # PYNQ_UARTopus
-Python platform to use a TUL PYNQ-Z2 development board to virtualize up to 12 UART connections (tx+rx @ 9600bps) over TCP-IP.\
+Python platform to use a TUL PYNQ-Z2 development board to virtualize up to 12 UART connections (tx+rx@9600bps) over TCP-IP.\
 Based on [**parthpower/axi_uartlite_pynq**](https://github.com/parthpower/axi_uartlite_pynq) Vivado project.
 
 ## UART interfaces pinout
